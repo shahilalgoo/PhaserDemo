@@ -5,30 +5,53 @@ var bob, speed = 8;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
-        game.load.image('bob', 'assets/sprites/bob.png');
+        game.load.spritesheet('bob', 'assets/spritesheets/bobSheet.png', 250, 250);
+        game.load.image('tree', 'assets/backgrounds/treebg.png');
     },
     create: function(){
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = '#89ff80';
         console.log("state0");
 
         addChangeStateEventListeners();
+        game.world.setBounds(0, 0, 2500, 1000);
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+        var treeBG = game.add.sprite(0, 0, 'tree');
 
         bob = game.add.sprite(centerX, centerY, 'bob');
         bob.anchor.setTo(0.5, 0.5);
+
+        game.physics.enable(bob);
+        bob.body.collideWorldBounds = true;
+        bob.animations.add('walk', [0, 1, 2, 3]);
+
+        game.camera.follow(bob);
+        game.camera.deadzone = new Phaser.Rectangle(centerX - 300, 0, 600, 1000);
+        
     },
     update: function(){
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+            bob.scale.setTo(1, 1);
             bob.x += speed;
+            bob.animations.play('walk', 7, true);
         }
         else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+            bob.scale.setTo(-1, 1);
             bob.x -= speed;
+            bob.animations.play('walk', 7, true);
+        } else {
+            bob.animations.stop('walk');
+            bob.frame = 0;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
             bob.y += speed;
         }
         else if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
             bob.y -= speed;
+            if (bob.y < 340) {
+                bob.y = 340;
+            }
         }
 
     }
