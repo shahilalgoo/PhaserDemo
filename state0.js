@@ -11,7 +11,7 @@ demo.state0.prototype = {
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = '#89ff80';
-        console.log("state0");
+        
 
         addChangeStateEventListeners();
         game.world.setBounds(0, 0, 2500, 1000);
@@ -58,6 +58,7 @@ demo.state0.prototype = {
 };
 
 function changeState(i, StateNum) {
+    console.log('state' + StateNum);
     game.state.start('state' + StateNum);
 }
 
